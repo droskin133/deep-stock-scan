@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { StockSearch } from "@/components/StockSearch";
+import { StockScreener } from "@/components/StockScreener";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { PriceTargets } from "@/components/PriceTargets";
 import { NewsSection } from "@/components/NewsSection";
 import { OwnershipData } from "@/components/OwnershipData";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 
 // Mock data for demonstration
@@ -112,75 +114,101 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-8 space-y-8">
-        {/* Search Section */}
-        <div className="text-center">
-          <StockSearch onSearch={handleSearch} isLoading={isLoading} />
-        </div>
+        <Tabs defaultValue="research" className="w-full">
+          <div className="flex justify-center mb-6">
+            <TabsList className="grid w-full max-w-md grid-cols-2 bg-muted/50">
+              <TabsTrigger value="research" className="text-sm">Stock Research</TabsTrigger>
+              <TabsTrigger value="screener" className="text-sm">Stock Screener</TabsTrigger>
+            </TabsList>
+          </div>
 
-        {/* Loading State */}
-        {isLoading && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="space-y-3">
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-32 w-full" />
+          <TabsContent value="research" className="space-y-8">
+            {/* Search Section */}
+            <div className="text-center">
+              <StockSearch onSearch={handleSearch} isLoading={isLoading} />
+            </div>
+
+            {/* Loading State */}
+            {isLoading && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="space-y-3">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-32 w-full" />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        )}
+            )}
 
-        {/* Stock Data */}
-        {stockData && !isLoading && (
-          <div className="space-y-6">
-            {/* Price Display */}
-            <PriceDisplay
-              symbol={selectedStock}
-              price={stockData.price}
-              change={stockData.change}
-              changePercent={stockData.changePercent}
-              high={stockData.high}
-              low={stockData.low}
-              volume={stockData.volume}
-              marketCap={stockData.marketCap}
-            />
+            {/* Stock Data */}
+            {stockData && !isLoading && (
+              <div className="space-y-6">
+                {/* Price Display */}
+                <PriceDisplay
+                  symbol={selectedStock}
+                  price={stockData.price}
+                  change={stockData.change}
+                  changePercent={stockData.changePercent}
+                  high={stockData.high}
+                  low={stockData.low}
+                  volume={stockData.volume}
+                  marketCap={stockData.marketCap}
+                />
 
-            {/* Price Targets and News */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <PriceTargets
-                currentPrice={stockData.price}
-                targets={stockData.targets}
-                consensus={stockData.consensus}
-              />
-              <NewsSection news={stockData.news} />
-            </div>
+                {/* Price Targets and News */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <PriceTargets
+                    currentPrice={stockData.price}
+                    targets={stockData.targets}
+                    consensus={stockData.consensus}
+                  />
+                  <NewsSection news={stockData.news} />
+                </div>
 
-            {/* Ownership Data */}
-            <OwnershipData
-              institutional={stockData.institutional}
-              government={stockData.government}
-              insiderTrades={stockData.insiderTrades}
-              totalShares={15000000000}
-            />
-          </div>
-        )}
+                {/* Ownership Data */}
+                <OwnershipData
+                  institutional={stockData.institutional}
+                  government={stockData.government}
+                  insiderTrades={stockData.insiderTrades}
+                  totalShares={15000000000}
+                />
+              </div>
+            )}
 
-        {/* Welcome Message */}
-        {!selectedStock && !isLoading && (
-          <div className="text-center py-16">
-            <div className="bg-gradient-to-br from-card to-financial-card p-8 rounded-lg border border-financial-border shadow-card max-w-2xl mx-auto">
-              <h2 className="text-2xl font-bold mb-4">Welcome to Stock Research Pro</h2>
-              <p className="text-muted-foreground mb-6">
-                Get comprehensive stock analysis including current prices, analyst price targets, 
-                recent news, institutional ownership, and insider trading activity.
+            {/* Welcome Message */}
+            {!selectedStock && !isLoading && (
+              <div className="text-center py-16">
+                <div className="bg-gradient-to-br from-card to-financial-card p-8 rounded-lg border border-financial-border shadow-card max-w-2xl mx-auto">
+                  <h2 className="text-2xl font-bold mb-4">Stock Research</h2>
+                  <p className="text-muted-foreground mb-6">
+                    Get comprehensive stock analysis including current prices, analyst price targets, 
+                    recent news, institutional ownership, and insider trading activity.
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Try searching for <strong>AAPL</strong> to see sample data, or enter any stock symbol to get started.
+                  </p>
+                </div>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="screener">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold mb-4">Discover New Investment Opportunities</h2>
+              <p className="text-muted-foreground max-w-3xl mx-auto">
+                Use advanced filters to screen stocks based on technical indicators, fundamental metrics, 
+                volume patterns, and analyst activity to find your next investment.
               </p>
-              <p className="text-sm text-muted-foreground">
-                Try searching for <strong>AAPL</strong> to see sample data, or enter any stock symbol to get started.
-              </p>
             </div>
-          </div>
-        )}
+            <StockScreener onSelectStock={(symbol) => {
+              setSelectedStock(symbol);
+              // Switch to research tab when stock is selected from screener
+              const researchTab = document.querySelector('[data-state="inactive"][value="research"]') as HTMLElement;
+              if (researchTab) researchTab.click();
+            }} />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
