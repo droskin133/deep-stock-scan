@@ -14,6 +14,93 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_interactions: {
+        Row: {
+          created_at: string
+          feedback_notes: string | null
+          feedback_rating: number | null
+          id: string
+          query: string
+          response: Json | null
+          symbols: string[] | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feedback_notes?: string | null
+          feedback_rating?: number | null
+          id?: string
+          query: string
+          response?: Json | null
+          symbols?: string[] | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feedback_notes?: string | null
+          feedback_rating?: number | null
+          id?: string
+          query?: string
+          response?: Json | null
+          symbols?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      alerts: {
+        Row: {
+          alert_type: Database["public"]["Enums"]["alert_type"]
+          conditions: Json | null
+          created_at: string
+          description: string | null
+          id: string
+          percentage_value: number | null
+          snoozed_until: string | null
+          status: Database["public"]["Enums"]["alert_status"]
+          symbol: string
+          target_value: number | null
+          timeframe: Database["public"]["Enums"]["timeframe"] | null
+          title: string
+          triggered_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alert_type: Database["public"]["Enums"]["alert_type"]
+          conditions?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          percentage_value?: number | null
+          snoozed_until?: string | null
+          status?: Database["public"]["Enums"]["alert_status"]
+          symbol: string
+          target_value?: number | null
+          timeframe?: Database["public"]["Enums"]["timeframe"] | null
+          title: string
+          triggered_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alert_type?: Database["public"]["Enums"]["alert_type"]
+          conditions?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          percentage_value?: number | null
+          snoozed_until?: string | null
+          status?: Database["public"]["Enums"]["alert_status"]
+          symbol?: string
+          target_value?: number | null
+          timeframe?: Database["public"]["Enums"]["timeframe"] | null
+          title?: string
+          triggered_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -47,6 +134,113 @@ export type Database = {
         }
         Relationships: []
       }
+      user_preferences: {
+        Row: {
+          created_at: string
+          data_sharing_consent: boolean | null
+          default_timeframe: Database["public"]["Enums"]["timeframe"] | null
+          id: string
+          notification_settings: Json | null
+          preferred_indicators: string[] | null
+          theme_preference: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data_sharing_consent?: boolean | null
+          default_timeframe?: Database["public"]["Enums"]["timeframe"] | null
+          id?: string
+          notification_settings?: Json | null
+          preferred_indicators?: string[] | null
+          theme_preference?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data_sharing_consent?: boolean | null
+          default_timeframe?: Database["public"]["Enums"]["timeframe"] | null
+          id?: string
+          notification_settings?: Json | null
+          preferred_indicators?: string[] | null
+          theme_preference?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      watchlist_items: {
+        Row: {
+          added_at: string
+          company_name: string | null
+          id: string
+          notes: string | null
+          sector: string | null
+          sort_order: number | null
+          symbol: string
+          watchlist_id: string
+        }
+        Insert: {
+          added_at?: string
+          company_name?: string | null
+          id?: string
+          notes?: string | null
+          sector?: string | null
+          sort_order?: number | null
+          symbol: string
+          watchlist_id: string
+        }
+        Update: {
+          added_at?: string
+          company_name?: string | null
+          id?: string
+          notes?: string | null
+          sector?: string | null
+          sort_order?: number | null
+          symbol?: string
+          watchlist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "watchlist_items_watchlist_id_fkey"
+            columns: ["watchlist_id"]
+            isOneToOne: false
+            referencedRelation: "watchlists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      watchlists: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_default: boolean | null
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_default?: boolean | null
+          name?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_default?: boolean | null
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -55,7 +249,24 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      alert_status: "active" | "triggered" | "snoozed" | "cancelled"
+      alert_type:
+        | "price_above"
+        | "price_below"
+        | "percent_change"
+        | "volume_spike"
+        | "technical_indicator"
+        | "news_event"
+        | "earnings"
+      timeframe:
+        | "1min"
+        | "5min"
+        | "15min"
+        | "30min"
+        | "1hr"
+        | "daily"
+        | "weekly"
+        | "monthly"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -182,6 +393,27 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      alert_status: ["active", "triggered", "snoozed", "cancelled"],
+      alert_type: [
+        "price_above",
+        "price_below",
+        "percent_change",
+        "volume_spike",
+        "technical_indicator",
+        "news_event",
+        "earnings",
+      ],
+      timeframe: [
+        "1min",
+        "5min",
+        "15min",
+        "30min",
+        "1hr",
+        "daily",
+        "weekly",
+        "monthly",
+      ],
+    },
   },
 } as const
