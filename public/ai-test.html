@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Test Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .input-section {
+      margin-bottom: 20px;
+    }
+    #promptInput {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    #askButton {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    #askButton:hover {
+      background-color: #0056b3;
+    }
+    #askButton:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .output-section {
+      margin-top: 30px;
+    }
+    .output-label {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    #aiOutput {
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      padding: 15px;
+      min-height: 100px;
+      font-family: 'Courier New', monospace;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .examples {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #e7f3ff;
+      border-left: 4px solid #007bff;
+      border-radius: 4px;
+    }
+    .examples h3 {
+      margin-top: 0;
+      color: #0056b3;
+    }
+    .example-query {
+      background: white;
+      padding: 8px 12px;
+      margin: 5px 0;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      transition: background-color 0.2s;
+    }
+    .example-query:hover {
+      background-color: #f0f8ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🤖 OpenAI Financial Assistant Test</h1>
+    
+    <div class="input-section">
+      <input 
+        id="promptInput" 
+        type="text" 
+        placeholder="Ask about stocks, market analysis, or financial insights..." 
+        maxlength="500"
+      />
+      <button id="askButton">Ask AI</button>
+    </div>
+
+    <div class="examples">
+      <h3>💡 Try these examples:</h3>
+      <div class="example-query" onclick="setPrompt('Analyze AAPL stock fundamentals')">
+        Analyze AAPL stock fundamentals
+      </div>
+      <div class="example-query" onclick="setPrompt('What are the best technical indicators for day trading?')">
+        What are the best technical indicators for day trading?
+      </div>
+      <div class="example-query" onclick="setPrompt('Explain the current market sentiment')">
+        Explain the current market sentiment
+      </div>
+      <div class="example-query" onclick="setPrompt('Set up an alert for TSLA above $250')">
+        Set up an alert for TSLA above $250
+      </div>
+    </div>
+
+    <div class="output-section">
+      <div class="output-label">🎯 AI Response:</div>
+      <pre id="aiOutput">Ready to analyze! Enter a financial question above and click "Ask AI".</pre>
+    </div>
+  </div>
+
+  <script>
+    async function askAI(promptText) {
+      try {
+        console.log('Sending request to AI:', promptText);
+        
+        const response = await fetch(`${window.location.origin}/functions/v1/openai-chat`, {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({ 
+            input: promptText,
+            context: "User testing financial AI assistant functionality"
+          })
+        });
+
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Response error:', errorText);
+          return `❌ Error (${response.status}): ${errorText}`;
+        }
+
+        const data = await response.json();
+        console.log('Response data:', data);
+        
+        return data.result || data.error || "❓ No response received";
+      } catch (error) {
+        console.error('Request failed:', error);
+        return `🚫 Network Error: ${error.message}`;
+      }
+    }
+
+    function setPrompt(text) {
+      document.getElementById("promptInput").value = text;
+    }
+
+    async function handleAskClick() {
+      const input = document.getElementById("promptInput").value.trim();
+      const button = document.getElementById("askButton");
+      const output = document.getElementById("aiOutput");
+      
+      if (!input) {
+        output.innerText = "⚠️ Please enter a question first.";
+        return;
+      }
+
+      button.disabled = true;
+      button.innerText = "Processing...";
+      output.innerText = "🤔 Thinking... (this may take a few seconds)";
+      
+      try {
+        const result = await askAI(input);
+        output.innerText = result;
+      } catch (error) {
+        output.innerText = `💥 Unexpected error: ${error.message}`;
+      } finally {
+        button.disabled = false;
+        button.innerText = "Ask AI";
+      }
+    }
+
+    // Event listeners
+    document.getElementById("askButton").addEventListener("click", handleAskClick);
+    
+    document.getElementById("promptInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        handleAskClick();
+      }
+    });
+
+    // Focus input on load
+    document.getElementById("promptInput").focus();
+  </script>
+</body>
+</html>

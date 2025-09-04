@@ -1,1 +1,10 @@
 project_id = "xreaohljluklekyolwfs"
+
+[functions.openai-chat]
+verify_jwt = false
+
+[functions.polygon-data]
+verify_jwt = false
+
+[functions.finnhub-data]
+verify_jwt = false
