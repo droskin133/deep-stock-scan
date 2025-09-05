@@ -10,6 +10,7 @@ import StockDetail from "./pages/StockDetail";
 import Portfolio from "./pages/Portfolio";
 import News from "./pages/News";
 import Index from "./pages/Index";
+import DeepScan from "./pages/DeepScan";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/stock/:symbol" element={<StockDetail />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/news" element={<News />} />
+            <Route path="/deep-scan" element={<DeepScan />} />
             <Route path="/demo" element={<Index />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

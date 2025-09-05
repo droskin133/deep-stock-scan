@@ -12,7 +12,8 @@ import {
   Search,
   BarChart3,
   Newspaper,
-  User
+  User,
+  Activity
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -63,6 +64,12 @@ export default function FinancialDashboard() {
       icon: Search,
       current: true,
       onClick: () => {}
+    },
+    {
+      name: "Deep Scan",
+      icon: Activity,
+      current: false,
+      onClick: () => navigate('/deep-scan')
     },
     {
       name: "Watchlist",
