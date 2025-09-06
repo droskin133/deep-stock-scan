@@ -5,11 +5,11 @@ import { useToast } from "@/hooks/use-toast";
 
 interface Profile {
   id: string;
-  user_id: string;
+  email?: string;
   full_name?: string;
-  avatar_url?: string;
-  role: string;
-  preferences: any;
+  initials?: string;
+  role?: 'admin' | 'president' | 'premium' | 'basic' | 'trial';
+  created_at?: string;
 }
 
 interface AuthContextType {
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
-      .eq("user_id", userId)
+      .eq("id", userId)
       .maybeSingle();
 
     if (error) {
@@ -157,7 +157,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { error } = await supabase
       .from("profiles")
       .update(updates)
-      .eq("user_id", user.id);
+      .eq("id", user.id);
 
     if (!error && profile) {
       setProfile({ ...profile, ...updates });
