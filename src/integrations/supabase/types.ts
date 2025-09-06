@@ -47,56 +47,328 @@ export type Database = {
         }
         Relationships: []
       }
-      alerts: {
+      ai_performance_daily: {
         Row: {
-          alert_type: Database["public"]["Enums"]["alert_type"]
-          conditions: Json | null
-          created_at: string
-          description: string | null
-          id: string
-          percentage_value: number | null
-          snoozed_until: string | null
-          status: Database["public"]["Enums"]["alert_status"]
-          symbol: string
-          target_value: number | null
-          timeframe: Database["public"]["Enums"]["timeframe"] | null
-          title: string
-          triggered_at: string | null
+          alerts_total: number
+          alerts_win: number
+          avg_return: number | null
+          dt: string
+          features: Json | null
+          model: string
+          ticker: string
           updated_at: string
+          win_rate: number | null
+        }
+        Insert: {
+          alerts_total?: number
+          alerts_win?: number
+          avg_return?: number | null
+          dt: string
+          features?: Json | null
+          model?: string
+          ticker: string
+          updated_at?: string
+          win_rate?: number | null
+        }
+        Update: {
+          alerts_total?: number
+          alerts_win?: number
+          avg_return?: number | null
+          dt?: string
+          features?: Json | null
+          model?: string
+          ticker?: string
+          updated_at?: string
+          win_rate?: number | null
+        }
+        Relationships: []
+      }
+      alert_triggers: {
+        Row: {
+          acknowledged_at: string | null
+          alert_id: string
+          delivered_channels: string[] | null
+          dismissed: boolean
+          evaluation_window_minutes: number
+          id: string
+          outcome: string | null
+          pnl_after_window: number | null
+          price: number | null
+          snapshot: Json | null
+          ticker: string
+          triggered_at: string
           user_id: string
         }
         Insert: {
-          alert_type: Database["public"]["Enums"]["alert_type"]
-          conditions?: Json | null
-          created_at?: string
-          description?: string | null
+          acknowledged_at?: string | null
+          alert_id: string
+          delivered_channels?: string[] | null
+          dismissed?: boolean
+          evaluation_window_minutes?: number
           id?: string
-          percentage_value?: number | null
-          snoozed_until?: string | null
-          status?: Database["public"]["Enums"]["alert_status"]
-          symbol: string
-          target_value?: number | null
-          timeframe?: Database["public"]["Enums"]["timeframe"] | null
-          title: string
-          triggered_at?: string | null
-          updated_at?: string
+          outcome?: string | null
+          pnl_after_window?: number | null
+          price?: number | null
+          snapshot?: Json | null
+          ticker: string
+          triggered_at?: string
           user_id: string
         }
         Update: {
-          alert_type?: Database["public"]["Enums"]["alert_type"]
-          conditions?: Json | null
-          created_at?: string
-          description?: string | null
+          acknowledged_at?: string | null
+          alert_id?: string
+          delivered_channels?: string[] | null
+          dismissed?: boolean
+          evaluation_window_minutes?: number
           id?: string
-          percentage_value?: number | null
-          snoozed_until?: string | null
-          status?: Database["public"]["Enums"]["alert_status"]
-          symbol?: string
-          target_value?: number | null
-          timeframe?: Database["public"]["Enums"]["timeframe"] | null
-          title?: string
+          outcome?: string | null
+          pnl_after_window?: number | null
+          price?: number | null
+          snapshot?: Json | null
+          ticker?: string
+          triggered_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alert_triggers_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: false
+            referencedRelation: "alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      alerts: {
+        Row: {
+          condition: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          source: Database["public"]["Enums"]["alert_source_enum"]
+          status: string
+          ticker: string
+          triggered_at: string | null
+          user_id: string
+        }
+        Insert: {
+          condition: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          source?: Database["public"]["Enums"]["alert_source_enum"]
+          status?: string
+          ticker: string
           triggered_at?: string | null
-          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          condition?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          source?: Database["public"]["Enums"]["alert_source_enum"]
+          status?: string
+          ticker?: string
+          triggered_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      annotations: {
+        Row: {
+          at: string
+          created_at: string
+          data: Json
+          id: string
+          ticker: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          at: string
+          created_at?: string
+          data: Json
+          id?: string
+          ticker: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          at?: string
+          created_at?: string
+          data?: Json
+          id?: string
+          ticker?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      congress_trades: {
+        Row: {
+          amount_range: string | null
+          chamber: string | null
+          id: string
+          ingested_at: string
+          person: string | null
+          raw: Json | null
+          reported_date: string | null
+          source_url: string | null
+          ticker: string
+          trade_date: string | null
+          transaction_type: string | null
+        }
+        Insert: {
+          amount_range?: string | null
+          chamber?: string | null
+          id?: string
+          ingested_at?: string
+          person?: string | null
+          raw?: Json | null
+          reported_date?: string | null
+          source_url?: string | null
+          ticker: string
+          trade_date?: string | null
+          transaction_type?: string | null
+        }
+        Update: {
+          amount_range?: string | null
+          chamber?: string | null
+          id?: string
+          ingested_at?: string
+          person?: string | null
+          raw?: Json | null
+          reported_date?: string | null
+          source_url?: string | null
+          ticker?: string
+          trade_date?: string | null
+          transaction_type?: string | null
+        }
+        Relationships: []
+      }
+      institutional_ownership: {
+        Row: {
+          filer_cik: string | null
+          filer_name: string
+          id: string
+          ingested_at: string
+          position_change: string | null
+          raw: Json | null
+          reported_date: string | null
+          shares: number | null
+          source_url: string | null
+          ticker: string
+        }
+        Insert: {
+          filer_cik?: string | null
+          filer_name: string
+          id?: string
+          ingested_at?: string
+          position_change?: string | null
+          raw?: Json | null
+          reported_date?: string | null
+          shares?: number | null
+          source_url?: string | null
+          ticker: string
+        }
+        Update: {
+          filer_cik?: string | null
+          filer_name?: string
+          id?: string
+          ingested_at?: string
+          position_change?: string | null
+          raw?: Json | null
+          reported_date?: string | null
+          shares?: number | null
+          source_url?: string | null
+          ticker?: string
+        }
+        Relationships: []
+      }
+      market_anomalies: {
+        Row: {
+          data: Json
+          detected_at: string
+          id: string
+          kind: string
+          score: number | null
+          ticker: string
+        }
+        Insert: {
+          data: Json
+          detected_at?: string
+          id?: string
+          kind: string
+          score?: number | null
+          ticker: string
+        }
+        Update: {
+          data?: Json
+          detected_at?: string
+          id?: string
+          kind?: string
+          score?: number | null
+          ticker?: string
+        }
+        Relationships: []
+      }
+      news_watches: {
+        Row: {
+          channels: string[] | null
+          created_at: string
+          id: string
+          keyword: string | null
+          ticker: string | null
+          user_id: string
+        }
+        Insert: {
+          channels?: string[] | null
+          created_at?: string
+          id?: string
+          keyword?: string | null
+          ticker?: string | null
+          user_id: string
+        }
+        Update: {
+          channels?: string[] | null
+          created_at?: string
+          id?: string
+          keyword?: string | null
+          ticker?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          payload: Json | null
+          read_at: string | null
+          title: string | null
+          type: Database["public"]["Enums"]["notification_type_enum"]
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          payload?: Json | null
+          read_at?: string | null
+          title?: string | null
+          type?: Database["public"]["Enums"]["notification_type_enum"]
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          payload?: Json | null
+          read_at?: string | null
+          title?: string | null
+          type?: Database["public"]["Enums"]["notification_type_enum"]
           user_id?: string
         }
         Relationships: []
@@ -134,6 +406,87 @@ export type Database = {
         }
         Relationships: []
       }
+      sec_filings: {
+        Row: {
+          filed_at: string
+          filing_type: string
+          id: string
+          ingested_at: string
+          raw: Json | null
+          source_url: string | null
+          ticker: string
+          title: string | null
+        }
+        Insert: {
+          filed_at: string
+          filing_type: string
+          id?: string
+          ingested_at?: string
+          raw?: Json | null
+          source_url?: string | null
+          ticker: string
+          title?: string | null
+        }
+        Update: {
+          filed_at?: string
+          filing_type?: string
+          id?: string
+          ingested_at?: string
+          raw?: Json | null
+          source_url?: string | null
+          ticker?: string
+          title?: string | null
+        }
+        Relationships: []
+      }
+      sp500: {
+        Row: {
+          ticker: string
+        }
+        Insert: {
+          ticker: string
+        }
+        Update: {
+          ticker?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          customer_id: string | null
+          history: Json | null
+          id: string
+          plan: Database["public"]["Enums"]["plan_enum"]
+          provider: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          customer_id?: string | null
+          history?: Json | null
+          id?: string
+          plan?: Database["public"]["Enums"]["plan_enum"]
+          provider?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          customer_id?: string | null
+          history?: Json | null
+          id?: string
+          plan?: Database["public"]["Enums"]["plan_enum"]
+          provider?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           created_at: string
@@ -166,6 +519,57 @@ export type Database = {
           preferred_indicators?: string[] | null
           theme_preference?: string | null
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          ai_suggestions_default: boolean
+          created_at: string
+          email_notifications: boolean
+          push_notifications: boolean
+          theme: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_suggestions_default?: boolean
+          created_at?: string
+          email_notifications?: boolean
+          push_notifications?: boolean
+          theme?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_suggestions_default?: boolean
+          created_at?: string
+          email_notifications?: boolean
+          push_notifications?: boolean
+          theme?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      watchlist: {
+        Row: {
+          created_at: string
+          id: string
+          ticker: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ticker: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ticker?: string
           user_id?: string
         }
         Relationships: []
@@ -241,6 +645,30 @@ export type Database = {
         }
         Relationships: []
       }
+      widget_layouts: {
+        Row: {
+          id: string
+          layout: Json
+          page: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          layout: Json
+          page: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          layout?: Json
+          page?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -249,6 +677,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      alert_source_enum: "user" | "ai" | "community"
       alert_status: "active" | "triggered" | "snoozed" | "cancelled"
       alert_type:
         | "price_above"
@@ -258,6 +687,8 @@ export type Database = {
         | "technical_indicator"
         | "news_event"
         | "earnings"
+      notification_type_enum: "alert_trigger" | "system" | "news"
+      plan_enum: "basic" | "premium" | "trial"
       timeframe:
         | "1min"
         | "5min"
@@ -267,6 +698,7 @@ export type Database = {
         | "daily"
         | "weekly"
         | "monthly"
+      user_role_enum: "admin" | "president" | "premium" | "basic" | "trial"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -394,6 +826,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      alert_source_enum: ["user", "ai", "community"],
       alert_status: ["active", "triggered", "snoozed", "cancelled"],
       alert_type: [
         "price_above",
@@ -404,6 +837,8 @@ export const Constants = {
         "news_event",
         "earnings",
       ],
+      notification_type_enum: ["alert_trigger", "system", "news"],
+      plan_enum: ["basic", "premium", "trial"],
       timeframe: [
         "1min",
         "5min",
@@ -414,6 +849,7 @@ export const Constants = {
         "weekly",
         "monthly",
       ],
+      user_role_enum: ["admin", "president", "premium", "basic", "trial"],
     },
   },
 } as const
